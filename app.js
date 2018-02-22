@@ -72,7 +72,7 @@ app.use(session({
     secret: settings.secured_key,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore({mongooseConnection: mongoose.connection}),
+    store: new MongoStore({mongooseConnection: mongoose.connection}),
     cookie: {maxAge: 180 * 60 * 1000}
 }));
 app.use(flash());
@@ -95,7 +95,6 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/thanh-vien', routerMember);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

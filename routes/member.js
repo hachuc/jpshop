@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var csrf = require('csurf');
-
+var passport = require('passport');
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
@@ -32,6 +32,17 @@ router.post('/dang-nhap', member_controller.post_login);
 router.get('/facebook', member_controller.get_facebook_login);
 
 /* GET Facebook callback Login  */
-router.get('/facebook/callback', member_controller.get_facebook_login_callback);
+router.get('/facebook/callback',  passport.authenticate('facebook', {
+    //successRedirect: '/thanh-vien/tai-khoan',
+    failureRedirect: '/thanh-vien/dang-nhap'
+}), function (req, res, next) {
+    if (req.session.oldUrl) {
+        var oldUrl = req.session.oldUrl;
+        req.session.oldUrl = null;
+        res.redirect(oldUrl);
+    } else {
+        res.redirect('/thanh-vien/tai-khoan');
+    }
+});
 
 module.exports = router;

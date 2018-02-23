@@ -23,4 +23,16 @@ router.get('/reduce/:id', cart_controller.reduce);
 
 router.get('/remove/:id', cart_controller.remove);
 
+router.get('/checkout', isLoggedIn, cart_controller.view_checkout);
+
+router.post('/checkout', isLoggedIn, cart_controller.checkout);
+
 module.exports = router;
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    req.session.oldUrl = req.url;
+    res.redirect('/thanh-vien/dang-nhap');
+}
